@@ -1,0 +1,27 @@
+<p>cleintdemo works!</p>
+<div class="container">
+  <h2>Update Profile</h2>
+
+  <label for="name">Username:</label>
+  <input
+    type="text"
+    id="name"
+    [formControl]="userName"
+    placeholder="Enter at least 3 chars"
+  />
+
+  @if (userName.touched && userName.errors?.["minlength"]) {
+    <p class="error-text">Name is too short! (Min 3 chars)</p>
+  }
+
+  <button (click)="submitForm()">Save Changes</button>
+
+  <hr />
+
+  @if (logicError()) {
+    <div class="error-banner">
+      <strong>Error!</strong> {{ logicError() }}
+      <button (click)="logicError.set(null)">X</button>
+    </div>
+  }
+</div>

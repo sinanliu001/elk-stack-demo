@@ -1,0 +1,11 @@
+<p>global with error boundary works!</p>
+<button (click)="throwError()">Test Http Error (Interceptor)</button>
+<ng-container *ngIf="finished()">
+  <app-errorboundary>
+    <div *ngFor="let product of products()">
+      <div>
+        {{ product }}
+      </div>
+    </div>
+  </app-errorboundary>
+</ng-container>

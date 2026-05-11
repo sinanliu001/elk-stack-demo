@@ -1,0 +1,9 @@
+<ng-container *ngIf="hasError; else normalContent">
+  <div class="error-ui">
+    <h3>Widget Unavailable</h3>
+  </div>
+</ng-container>
+
+<ng-template #normalContent>
+  <ng-content></ng-content>
+</ng-template>

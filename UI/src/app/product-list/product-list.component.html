@@ -1,0 +1,10 @@
+<p>product-list works!</p>
+<button (click)="loadData()">Load Products</button>
+<button (click)="throwError()">Load Missing Products</button>
+
+<div *ngIf="loading()">Loading products...</div>
+<div *ngIf="error()">{{ error() }}</div>
+<ul *ngIf="!loading() && !error()"></ul>
+<div *ngFor="let product of products()">
+  <li>{{ product.title }} - {{ product.price | currency }}</li>
+</div>
