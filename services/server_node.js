@@ -9,26 +9,40 @@ const { products } = require("./utils");
 const app = express();
 const port = 3000;
 
-// Helper function to send logs directly to Logstash
-const sendToLogstash = (level, message, extra = {}) => {
-  const client = new net.Socket();
+/**
+ * @typedef {Object} LogstashRequestContext
+ * @property {number} statusCode
+ * @property {string} method
+ * @property {string} path
+ * @property {string} correlationId
+ */
+
+/**
+ * @param {string} level
+ * @param {string} message
+ * @param {LogstashRequestContext} ctx
+ */
+const sendToLogstash = (level, message, ctx) => {
+  const socket = new net.Socket();
 
   // 127.0.0.1 is the bridge to your Logstash Docker container
-  client.connect(5044, "127.0.0.1", () => {
+  socket.connect(5044, "127.0.0.1", () => {
     const logData = {
       "@timestamp": new Date().toISOString(),
-      level: level,
-      message: message,
-      ...extra,
+      level,
+      message,
+      statusCode: ctx.statusCode,
+      method: ctx.method,
+      path: ctx.path,
+      correlationId: ctx.correlationId,
     };
 
     // CRITICAL: The '\n' is required for the Logstash 'json_lines' codec
-    client.write(JSON.stringify(logData) + "\n");
-    client.end();
+    socket.write(JSON.stringify(logData) + "\n");
+    socket.end();
   });
 
-  client.on("error", (err) => {
-    // This will tell you EXACTLY if the connection is refused
+  socket.on("error", (err) => {
     console.error("Logstash Connection Error:", err.message);
   });
 };
@@ -69,8 +83,10 @@ app.use((req, res, next) => {
 
 app.get("/products/:id", async (req, res) => {
   sendToLogstash("error", "503 Service Unavailable", {
+    statusCode: 503,
     method: req.method,
     path: req.path,
+    correlationId: req.correlationId,
   });
   res.status(503).json({
     error: "Service Unavailable",
@@ -84,23 +100,29 @@ app.get("/products", (req, res) => {
 
   if (shouldFail) {
     sendToLogstash("error", "Database Connection Failed (Mock Error)", {
+      statusCode: 500,
       method: req.method,
       path: req.path,
+      correlationId: req.correlationId,
     });
     res.status(500).json({ error: "Database Connection Failed (Mock Error)" });
     return;
   }
   sendToLogstash("info", "200 OK: Products Retrieved", {
+    statusCode: 200,
     method: req.method,
     path: req.path,
+    correlationId: req.correlationId,
   });
   res.status(200).json(products);
 });
 
 app.get("/getIncorrectProducts", (req, res) => {
   sendToLogstash("info", "200 OK with Incorrect Data Format", {
+    statusCode: 200,
     method: req.method,
     path: req.path,
+    correlationId: req.correlationId,
   });
   res.status(200).json({
     productions: [
@@ -115,8 +137,10 @@ app.get("/getIncorrectProducts", (req, res) => {
 
 app.get("/missing-data", (req, res) => {
   sendToLogstash("error", "404 Not Found", {
+    statusCode: 404,
     method: req.method,
     path: req.path,
+    correlationId: req.correlationId,
   });
   res.status(404).jsonp({
     error: "Not Found",
