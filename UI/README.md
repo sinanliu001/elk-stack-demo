@@ -1,60 +1,66 @@
-# elk presentation
+# Angular UI (`UI/`)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.18.
-This project use for demo elk stack and error handle for angular.
+**Angular 19** application (`hw-presentation`) for the ELK demo: **HTTP interceptor** (retry + error mapping), **global `ErrorHandler`**, and small routes that exercise client-side and HTTP error paths against the mock API.
+
+Generated with [Angular CLI](https://github.com/angular/angular-cli) **19.2.18**.
+
+## Requirements
+
+- **Node.js** (LTS; project targets modern Angular).
+- Mock API on **http://localhost:3000** (see [`../services/README.md`](../services/README.md)) for HTTP demos to succeed.
 
 ## Development server
 
-To start a local development server, run:
-
 ```bash
-ng serve
+cd UI
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open [http://localhost:4200](http://localhost:4200) (or the URL printed by the CLI). The app reloads when you change sources.
 
-## Code scaffolding
+API base URL is currently hardcoded in `src/app/services/products.service.ts` (`http://localhost:3000/...`).
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Demo routes
 
-```bash
-ng generate component component-name
-```
+| Path | Intent |
+|------|--------|
+| `/products` | Product list; interceptor + random API failures. |
+| `/details` | “Global” demo (`GlobalComponent`). |
+| `/error-global` | Error boundary–style wrapper + bad payload flow. |
+| `/client` | Client-side error demo. |
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+> The shell nav may include links to routes that are not defined; trim or add routes as needed.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Production build and SSR
 
 ```bash
-ng build
+cd UI
+npm run build
+npm run serve:ssr:hw-presentation
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Default SSR listen port is **4000** unless `PORT` is set (`src/server.ts`).
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Tests
 
 ```bash
-ng test
+cd UI
+npm test
 ```
 
-## Running end-to-end tests
+Uses **Karma** + **Jasmine**. Fix or update specs if they drift from `AppComponent` templates.
 
-For end-to-end (e2e) testing, run:
+## Angular CLI reference
 
 ```bash
-ng e2e
+npx ng generate component component-name
+npx ng generate --help
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+More: [Angular CLI documentation](https://angular.dev/tools/cli).
 
-## Additional Resources
+## See also
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [../README.md](../README.md) — ELK + API + Prometheus run order.
+- [../services/README.md](../services/README.md) — API endpoints used by this UI.
