@@ -20,7 +20,10 @@ export class ProductListComponent {
 
     this.service.loadProducts().subscribe({
       next: (data) => this.products.set(data),
-      error: (err) => this.error.set(err.message), // Caught and formatted by Interceptor
+      error: (err) => {
+        this.error.set(err.message);
+        this.loading.set(false);
+      },
       complete: () => this.loading.set(false),
     });
   }
@@ -31,7 +34,10 @@ export class ProductListComponent {
         console.log('Data:', data);
         this.products.set(data);
       },
-      error: (err) => this.error.set(err.message), // Caught and formatted by Interceptor
+      error: (err) => {
+        this.error.set(err.message);
+        this.loading.set(false);
+      },
       complete: () => this.loading.set(false),
     });
   }

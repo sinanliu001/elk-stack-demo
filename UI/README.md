@@ -49,7 +49,11 @@ cd UI
 npm test
 ```
 
-Uses **Karma** + **Jasmine**. Fix or update specs if they drift from `AppComponent` templates.
+Uses **Karma** + **Jasmine**. For CI or non-interactive runs:
+
+```bash
+npm test -- --no-watch --browsers=ChromeHeadless
+```
 
 ## Angular CLI reference
 
