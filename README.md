@@ -123,5 +123,5 @@ Angular (browser) ──HTTP──► Express :3000 ──TCP JSON Lines──�
 ## Notes
 
 - **Security**: Elasticsearch has security disabled in Compose — **local demo only**.
-- **Logstash → Elasticsearch** in `elk/logstash.conf` uses `host.docker.internal:9200` so Logstash (in Docker) can reach Elasticsearch on the host in typical macOS setups. Adjust if you run everything on a single Docker network.
+- **Logstash → Elasticsearch** in `elk/logstash.conf` uses the **`elasticsearch`** service URL inside Compose (`http://elasticsearch:9200`). An init job installs the **`node-logs-*`** index template before Logstash starts. See [`elk/README.md`](elk/README.md) for mappings, manual template install, and host-only Elasticsearch options.
 - **`.gitignore`**: Do not commit `node_modules`, `UI/dist`, or Angular cache under `UI/.angular/`.
