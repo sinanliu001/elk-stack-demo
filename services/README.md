@@ -17,6 +17,15 @@ node server_node.js
 
 Server listens on **http://localhost:3000**.
 
+## Automated tests
+
+[Jest](https://jestjs.io/) + [Supertest](https://github.com/ladjs/supertest) exercise the HTTP API without starting Logstash (`net` is mocked).
+
+```bash
+cd services
+npm test
+```
+
 ## Endpoints (demo behaviour)
 
 | Method / path | Response |

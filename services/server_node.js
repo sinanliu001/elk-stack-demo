@@ -3,7 +3,6 @@ const client = require("prom-client");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const net = require("net");
-const path = require("path");
 const crypto = require("crypto");
 const { products } = require("./utils");
 
@@ -95,7 +94,6 @@ app.get("/products", (req, res) => {
     method: req.method,
     path: req.path,
   });
-  res.setHeader("Content-Type", register.contentType);
   res.status(200).json(products);
 });
 
@@ -131,7 +129,11 @@ app.get("/metrics", async (req, res) => {
   res.send(await register.metrics());
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Mock Server running at http://localhost:${port}`);
-  console.log(`📊 Prometheus Metrics at http://localhost:${port}/metrics`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`🚀 Mock Server running at http://localhost:${port}`);
+    console.log(`📊 Prometheus Metrics at http://localhost:${port}/metrics`);
+  });
+}
+
+module.exports = app;
