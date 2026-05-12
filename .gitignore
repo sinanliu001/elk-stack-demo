@@ -6,8 +6,8 @@
 /out-tsc
 /bazel-out
 
-# Node
-/node_modules
+# Node — ignore in repo root and all subfolders (services/, UI/, etc.)
+node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -30,6 +30,7 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+UI/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
